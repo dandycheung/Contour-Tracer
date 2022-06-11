@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package trace.core;
 
 import java.awt.Point;
@@ -36,10 +35,7 @@ import tracer.utils.Contour;
 import tracer.utils.Vector2D;
 
 public class PolygonBuilder {
-
-
 	private HashMap<Integer, Point[]> sourceVertices;
-
 	private HashMap<Integer, int[]> straightPathPivots;
 
 	private Vector<PolyBuildListener> polyBuildListeners;
@@ -52,60 +48,56 @@ public class PolygonBuilder {
 
 		constraintVec1 = new Vector2D();
 		constraintVec2 = new Vector2D();
-		
+
 		//copy vertices of contours into array data structure for faster look-ups
-		sourceVertices = new HashMap<Integer,Point[]>();
+		sourceVertices = new HashMap<Integer, Point[]>();
 		
 		//create pivots array to store maximum straight paths
 		straightPathPivots = new HashMap<Integer, int[]>();
 	}
-	
-	private void reset(){
+
+	private void reset() {
 		sourceVertices.clear();
 		straightPathPivots.clear();
-		
+
 		constraintVec1.x = 0;
 		constraintVec1.y = 0;
 		
 		constraintVec2.x = 0;
 		constraintVec2.y = 0;
 	}
-	
-	public Contour getPolygons(Contour contours)
-	{
-		//reset all data before searching
+
+	public Contour getPolygons(Contour contours) {
+		// reset all data before searching
 		reset();
-		
-		//copy contour point into array data structure for faster lookup during search
+
+		// copy contour point into array data structure for faster lookup during search
 		Iterator<Integer> contourIt = contours.getContourIterator();
 		Iterator<Point> contourPointIt;
-		while(contourIt.hasNext()){
+		while (contourIt.hasNext()) {
 			int contourID = contourIt.next();
 			contourPointIt = contours.getPointIterator(contourID);
 			Point contourVertices[] = new Point[contours.getContourSize(contourID)];
-			
+
 			for (int i = 0; i < contourVertices.length; ++i) {
 				contourVertices[i] = contourPointIt.next();
 			}
 			
-			//add pivots array to store maximum straight paths for each contour
+			// add pivots array to store maximum straight paths for each contour
 			int pivots[] = new int[contourVertices.length];
-			
+
 			sourceVertices.put(contourID, contourVertices);
-			
+
 			straightPathPivots.put(contourID, pivots);
-			
+
 			searchStraightPaths(contourID);
-			
-			
 		}
 		
-		//search straight paths, valid polygon segments and the optimal polygon for each contour 		
+		// search straight paths, valid polygon segments and the optimal polygon for each contour 		
 		return findOptimalPolygon();
 	}
 
 	private void searchStraightPaths(int contourID) {
-		
 		Point contourVertices[] = sourceVertices.get(contourID);
 		Point examinedVertex = null;
 		Point previousVertex = null;
@@ -113,7 +105,6 @@ public class PolygonBuilder {
 
 		// go through all source vertices and find their maximum straight paths
 		for (int currVertexIndex = 0; currVertexIndex < contourVertices.length; ++currVertexIndex) {
-
 			boolean isStraightPathFinished = false;
 
 			// reset constraints
@@ -121,8 +112,7 @@ public class PolygonBuilder {
 			constraintVec1.y = 0;
 			constraintVec2.x = 0;
 			constraintVec2.y = 0;
-			
-			
+
 			// reset directions
 			directionsChanged[0] = false;
 			directionsChanged[1] = false;
@@ -131,12 +121,9 @@ public class PolygonBuilder {
 
 			// with each step increase the examined index and check if there is
 			// still a valid straight path
-			int examinedIndex = (currVertexIndex + 1)
-					% (contourVertices.length);
+			int examinedIndex = (currVertexIndex + 1) % (contourVertices.length);
 
 			while (!isStraightPathFinished) {
-
-				
 				// get a reference to the examined vertex to check for direction
 				// changes
 				examinedVertex = contourVertices[examinedIndex];
@@ -159,7 +146,6 @@ public class PolygonBuilder {
 				
 				if ((Vector2D.cross(constraintVec1, direction) < 0)
 						|| (Vector2D.cross(constraintVec2, direction) > 0)) {
-
 					// store max path index
 					straightPathPivots.get(contourID)[currVertexIndex] = examinedIndex;
 					isStraightPathFinished = true;
@@ -196,19 +182,17 @@ public class PolygonBuilder {
 					straightPathPivots.get(contourID)[currVertexIndex] = examinedIndex;
 				}
 
-				examinedIndex = (examinedIndex + 1)
-						% (contourVertices.length);
+				examinedIndex = (examinedIndex + 1) % (contourVertices.length);
 			}
 		}
 	}
-	
+
 	private void updateConstraint(Vector2D direction) {
 		// constraint 1
 		Vector2D constraintTmp1 = new Vector2D();
 		Vector2D constraintTmp2 = new Vector2D();
 
-		if (!(java.lang.Math.abs(direction.x) <= 1 && java.lang.Math
-				.abs(direction.y) <= 1)) {
+		if (!(java.lang.Math.abs(direction.x) <= 1 && java.lang.Math.abs(direction.y) <= 1)) {
 			if (direction.y >= 0 && (direction.y > 0 || direction.x < 0)) {
 				constraintTmp1.x = direction.x + 1;
 			} else {
@@ -243,63 +227,52 @@ public class PolygonBuilder {
 		}
 	}
 
-	private Contour findOptimalPolygon() {
-		
+	private Contour findOptimalPolygon() {		
 		Contour optimalPolygons = new Contour();
-		
+
 		Iterator<Integer> contourIt = sourceVertices.keySet().iterator();
-		
-		while(contourIt.hasNext()){
+		while(contourIt.hasNext()) {
 			int contourID = contourIt.next();
-			
+
 			LinkedList<Integer> currentPolygon = new LinkedList<Integer>();
 			Point contourVertices[] = sourceVertices.get(contourID);
 			int pivots[] = straightPathPivots.get(contourID);
 
 			for (int polygonStartIndex = 0; polygonStartIndex < contourVertices.length-1; ++polygonStartIndex) {
-
 				currentPolygon.clear();
 
 				boolean isPolygonClosed = false;
 				int segmentStartIndex = polygonStartIndex;
-				int segmentEndIndex = (segmentStartIndex + 1)
-						% (contourVertices.length-1);
+				int segmentEndIndex = (segmentStartIndex + 1) % (contourVertices.length-1);
 
 				// add first index
 				currentPolygon.add(segmentStartIndex);
 
 				while (!isPolygonClosed) {
-
 					boolean isValidSegment = true;
 					// find the largest possible segment, beginning at the segment
 					// start index
 					// the end gets increased until the segment is no longer valid
 					while (isValidSegment) {
-
 						// calculate the cyclic difference of the examined index and
 						// the current index
-						int cyclicDifference = getCyclicDifference(contourID,
-								segmentStartIndex, segmentEndIndex);
+						int cyclicDifference = getCyclicDifference(contourID, segmentStartIndex, segmentEndIndex);
 
-						int extendedSegmentStart = (segmentStartIndex - 1)
-								% (contourVertices.length-1);
+						int extendedSegmentStart = (segmentStartIndex - 1) % (contourVertices.length-1);
 						if (extendedSegmentStart < 0)
 							extendedSegmentStart += contourVertices.length;
-						int extendedSegmentEnd = (segmentEndIndex + 1)
-								% (contourVertices.length-1);
 
-						int extendedSegmentDifference = getCyclicDifference(contourID,
-								extendedSegmentStart, extendedSegmentEnd);
-						int pivotDifference = getCyclicDifference(contourID,
-								extendedSegmentStart, pivots[extendedSegmentStart]-1);
+						int extendedSegmentEnd = (segmentEndIndex + 1) % (contourVertices.length-1);
+
+						int extendedSegmentDifference = getCyclicDifference(contourID, extendedSegmentStart, extendedSegmentEnd);
+						int pivotDifference = getCyclicDifference(contourID, extendedSegmentStart, pivots[extendedSegmentStart] - 1);
 
 						if (segmentEndIndex == polygonStartIndex) {
 							isPolygonClosed = true;
 							break;
 						}
 						
-						if(pivotDifference==0){
-							
+						if (pivotDifference == 0) {
 						}
 
 						if (cyclicDifference > contourVertices.length - 3) {
@@ -315,8 +288,7 @@ public class PolygonBuilder {
 							break;
 						}
 
-						segmentEndIndex = (segmentEndIndex + 1)
-								% (contourVertices.length);
+						segmentEndIndex = (segmentEndIndex + 1) % (contourVertices.length);
 					}
 
 					// add to current polygon
@@ -326,28 +298,25 @@ public class PolygonBuilder {
 				}
 
 				if (optimalPolygons.getContourSize(contourID) == 0 || optimalPolygons.getContourSize(contourID) > currentPolygon.size()) {
-					System.out.println("Found new optimal polygon with "
-							+ currentPolygon.size() + " points");
-					//optimalPolygon = currentPolygon;
-					//polygonVertices.addContour(contourID, currentPolygon);
+					System.out.println("Found new optimal polygon with " + currentPolygon.size() + " points");
+					// optimalPolygon = currentPolygon;
+					// polygonVertices.addContour(contourID, currentPolygon);
 
 					// clear old poly vertices
 					optimalPolygons.clear(contourID);
 
 					Iterator<Integer> polyIndexIt = currentPolygon.iterator();
 					while (polyIndexIt.hasNext()) {
-						optimalPolygons.addPoint(contourID,
-								contourVertices[polyIndexIt.next()]);
+						optimalPolygons.addPoint(contourID, contourVertices[polyIndexIt.next()]);
 					}
 				}
 			}
 		}
-		
+
 		return optimalPolygons;
 	}
 
 	private int getCyclicDifference(int contourID, int startIndex, int endIndex) {
-
 		Point contourVertices[] = sourceVertices.get(contourID);
 		
 		// calculate the cyclic difference of the examined index and the current
@@ -356,15 +325,13 @@ public class PolygonBuilder {
 		if (startIndex <= endIndex) {
 			cyclicDifference = endIndex - startIndex;
 		} else {
-			cyclicDifference = endIndex - startIndex
-					+ contourVertices.length;
+			cyclicDifference = endIndex - startIndex + contourVertices.length;
 		}
 
 		return cyclicDifference;
 	}
 
 //	private boolean isStraightPath(int contourID, int startIndex, int endIndex) {
-//
 //		Point contourVertices[] = sourceVertices.get(contourID);
 //		
 //		if (startIndex >= 0 && endIndex <= contourVertices.length - 1) {
@@ -377,11 +344,8 @@ public class PolygonBuilder {
 //			// do not check examined index and current index as they obviously
 //			// define the line
 //			for (int i = 1; i < cyclicDifference; ++i) {
-//
-//				int pathStartIndex = startIndex
-//						% (contourVertices.length - 1);
-//				int indexToCheck = (startIndex + i)
-//						% (contourVertices.length - 1);
+//				int pathStartIndex = startIndex % (contourVertices.length - 1);
+//				int indexToCheck = (startIndex + i) % (contourVertices.length - 1);
 //
 //				double pointDistance = Math.distanceToSegment(
 //						contourVertices[pathStartIndex],

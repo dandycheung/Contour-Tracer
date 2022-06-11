@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package trace.core;
+
 import tracer.gui.ImageComponent;
 import tracer.utils.Contour;
 
@@ -31,12 +31,11 @@ import tracer.utils.Contour;
  * and finally translates each polygon into a curve
  * The ImageTracer is a Singleton class to allow global access to trace components
  */
-public class ImageTracer {
-	
+public class ImageTracer {	
 	private static Potracer contourTracer = new Potracer();
 	private static PolygonBuilder polyBuilder = new PolygonBuilder();
 	private static CurveBuilder curveBuilder = new CurveBuilder();
-	
+
 	private static Contour outerPolygons;
 	private static Contour innerPolygons;
 
@@ -49,21 +48,22 @@ public class ImageTracer {
 	private static class Holder {
 		private static final ImageTracer INSTANCE = new ImageTracer();
 	}
+
 	public static ImageTracer getInstance() {
 		return Holder.INSTANCE;
 	}
-	
+
 	public void setImage(final ImageComponent sourceImage){
 		contourTracer.setImage(sourceImage);
 	}
-	
-	public void trace(){
+
+	public void trace() {
 		contourTracer.trace();
-		
+
 		outerPolygons = polyBuilder.getPolygons(contourTracer.getOuterContour());
 		innerPolygons = polyBuilder.getPolygons(contourTracer.getInnerContour());	
 	}
-	
+
 	public Contour getOuterPolygons() {
 		return outerPolygons;
 	}
@@ -71,9 +71,8 @@ public class ImageTracer {
 	public Contour getInnerPolygons() {
 		return innerPolygons;
 	}
-	
+
 	public CurveBuilder getCurveBuilder() {
 		return curveBuilder;
 	}
-
 }

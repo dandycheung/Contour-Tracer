@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.gui;
 
 import java.awt.BorderLayout;
@@ -42,12 +41,10 @@ import org.apache.batik.swing.JSVGCanvas;
 import trace.core.ImageTracer;
 import tracer.main.OptionsListener;
 
-public class GUI extends JPanel{
-	
+public class GUI extends JPanel {
 	private static final long serialVersionUID = -6823507468116509577L;
 
 	private ImageComponent sourceImage;
-
 	private ImageZoomComponent imageZoomComponent;
 
 	private JSVGCanvas svgCanvas;
@@ -65,7 +62,7 @@ public class GUI extends JPanel{
 	private JLabel minimumValueLabel;
 	private JLabel maximumValueLabel;
 	
-	public GUI(){
+	public GUI() {
 		this.setLayout(new BorderLayout());
 		setOpaque(true);
 		setFocusable(true);
@@ -92,7 +89,7 @@ public class GUI extends JPanel{
 		optionsPanel.setMaximumSize(new Dimension(100, 100));
 		optionsPanel.setLayout( new BoxLayout(optionsPanel, BoxLayout.Y_AXIS) );
 		
-		//slider
+		// slider
 		JLabel factorLabel = new JLabel("Factor: ");
 		JLabel minimumLabel = new JLabel("Minimum: ");
 		JLabel maximumLabel = new JLabel("Maximum: ");
@@ -251,8 +248,5 @@ public class GUI extends JPanel{
 	
 	public JSVGCanvas getSvgCanvas() {
 		return svgCanvas;
-	}
-
-	
-	
+	}	
 }

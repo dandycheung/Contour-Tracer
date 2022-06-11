@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.main;
+
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +33,6 @@ import trace.core.ImageTracer;
 import tracer.gui.GUI;
 
 public class OptionsListener implements ChangeListener {
-
 	private GUI gui;
 
 	public OptionsListener(GUI gui) {
@@ -43,20 +42,22 @@ public class OptionsListener implements ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		JSlider sourceSlider = (JSlider) e.getSource();
 		CurveBuilder svgBuilder = ImageTracer.getInstance().getCurveBuilder();
-		
+
 		if (sourceSlider.getName() == "factor") {
-			gui.setFactorValue(sourceSlider.getValue()/(double)100);
-			svgBuilder.setFactor(sourceSlider.getValue()/(double)100);
+			gui.setFactorValue(sourceSlider.getValue() / 100.0d);
+			svgBuilder.setFactor(sourceSlider.getValue() / 100.0d);
 			gui.updateSVGCanvas();
 		}
+
 		if (sourceSlider.getName() == "minimum") {
-			gui.setMinimumValue(sourceSlider.getValue()/(double)100);
-			svgBuilder.setMinimumAngle(sourceSlider.getValue()/(double)100);
+			gui.setMinimumValue(sourceSlider.getValue() / 100.0d);
+			svgBuilder.setMinimumAngle(sourceSlider.getValue() / 100.0d);
 			gui.updateSVGCanvas();
 		}
+
 		if (sourceSlider.getName() == "maximum") {
-			gui.setMaximumValue(sourceSlider.getValue()/(double)100);
-			svgBuilder.setMaximumAngle(sourceSlider.getValue()/(double)100);
+			gui.setMaximumValue(sourceSlider.getValue() / 100.0d);
+			svgBuilder.setMaximumAngle(sourceSlider.getValue() / 100.0d);
 			gui.updateSVGCanvas();
 		}
 	}

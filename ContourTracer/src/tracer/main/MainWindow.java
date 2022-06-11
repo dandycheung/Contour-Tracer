@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.main;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -43,7 +43,6 @@ import trace.core.ImageTracer;
 import tracer.gui.GUI;
 
 public class MainWindow extends JFrame {
-
 	private static final long serialVersionUID = 4375973878073035272L;
 	private static final String TITLE = "Potrace Contour Tracing";
 	private static final String INITIAL_OPEN = "data/zange.png";
@@ -57,15 +56,13 @@ public class MainWindow extends JFrame {
 		
 		// load the default image
 		File input = new File(INITIAL_OPEN);
-		if (!input.canRead())
-			// file not found, choose another image
+		if (!input.canRead()) // file not found, choose another image
 			input = openFile(); 
 		
 		gui.getSourceImage().loadImage(input);
 		gui.getImageZoomComponent().reload();
 		ImageTracer.getInstance().setImage(gui.getSourceImage());
 
-		
 		setContentPane(gui);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,7 +111,6 @@ public class MainWindow extends JFrame {
 		};
 		
 		Action fileSaveAction = new AbstractAction() {
-			
 			private static final long serialVersionUID = 1L;
 			
 			{
@@ -128,7 +124,6 @@ public class MainWindow extends JFrame {
 		};
 		
 		Action exitAction = new AbstractAction() {
-			
 			private static final long serialVersionUID = 1L;
 			
 			{
@@ -140,7 +135,6 @@ public class MainWindow extends JFrame {
 				 System.exit( 0 ); 
 			}
 		};
-		
 		
 		fileMenu.add(fileOpenAction);
 		fileMenu.add(fileSaveAction);
@@ -174,6 +168,4 @@ public class MainWindow extends JFrame {
 			}
 		});
 	}
-	
-
 }

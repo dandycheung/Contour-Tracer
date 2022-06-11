@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.utils;
+
 import java.awt.Point;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -31,27 +31,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Contour {
-
 	Hashtable<Integer, LinkedList<Point>> contours;
 
 	public Contour() {
-
 		contours = new Hashtable<Integer, LinkedList<Point>>();
-
 	}
 
 	public void addPoint(final int contourID, final Point p) {
-			LinkedList<Point> contour;	
-			if(contours.containsKey(contourID)){
-				contour = contours.get(contourID);
-			} else {
-				contour = new LinkedList<Point>();
-				contours.put(contourID, contour);
-			}
-			contour.add(p);
+		LinkedList<Point> contour;
+		if (contours.containsKey(contourID)) {
+			contour = contours.get(contourID);
+		} else {
+			contour = new LinkedList<Point>();
+			contours.put(contourID, contour);
+		}
+		contour.add(p);
 	}
 	
-	public void addContour(final int contourID, final LinkedList<Point> contour){
+	public void addContour(final int contourID, final LinkedList<Point> contour) {
 		contours.put(contourID, contour);
 	}
 
@@ -63,29 +60,29 @@ public class Contour {
 		}
 	}
 	
-	public Iterator<Integer> getContourIterator(){
-			return contours.keySet().iterator();
+	public Iterator<Integer> getContourIterator() {
+		return contours.keySet().iterator();
 	}
 	
-	public int getSize(){
+	public int getSize() {
 		return contours.size();
 	}
-	
-	public int getContourSize(final int contourID){
-		if (contours.containsKey(contourID)){
+
+	public int getContourSize(final int contourID) {
+		if (contours.containsKey(contourID)) {
 			return contours.get(contourID).size();
 		} else {
 			return 0;
 		}
 	}
-	
-	public void clear(final int contourID){
-		if (contours.containsKey(contourID)){
+
+	public void clear(final int contourID) {
+		if (contours.containsKey(contourID)) {
 			contours.get(contourID).clear();
 		}
 	}
 	
-	public boolean hasContour(final int contourID){
+	public boolean hasContour(final int contourID) {
 		return contours.containsKey(contourID);
 	}
 }

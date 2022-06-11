@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.gui;
 
 import java.awt.BasicStroke;
@@ -43,12 +42,12 @@ import tracer.main.TraceListener;
 import tracer.utils.Contour;
 
 public class ImageZoomComponent extends JComponent implements TraceListener {
-
 	private static final long serialVersionUID = -1857902074286586118L;
-	private final static int MIN_SIZE = 300;
+
+	private static final int MIN_SIZE = 300;
 	private static final int GRID_STROKE_WIDTH = 1;
 	private static final Color GRID_COLOR = Color.BLACK;
-	private final static int MAX_GRID_DRAW = 40;
+	private static final int MAX_GRID_DRAW = 40;
 
 	private static final int CONTOUR_STROKE_WIDTH = 2;
 	private static final Color CONTOUR_OUTER_COLOR = Color.BLUE;
@@ -77,10 +76,8 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 	
 	private boolean drawContoursEnabled;
 	private boolean drawPolygonEnabled;
-	
 
 	public ImageZoomComponent(final ImageComponent imageComp) {
-
 		this.imageComponent = imageComp;
 		// 1px simple border
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -89,14 +86,13 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 		drawPolygonEnabled = true;
 	}
 	
-	public void reload(){
-		if(imageComponent.getImage() != null){
+	public void reload() {
+		if (imageComponent.getImage() != null) {
 			this.sourceImage = imageComponent.getImage();
-			
+
 			if (sourceImage.getHeight() < MIN_SIZE) {
 				this.setMinimumSize(new Dimension(MIN_SIZE, MIN_SIZE));
 				this.size = MIN_SIZE;
-
 			} else {
 				this.setMinimumSize(new Dimension(sourceImage.getHeight(),
 						sourceImage.getHeight()));
@@ -120,7 +116,7 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 	}
 
 	public void paintComponent(Graphics g) {
-		if(sourceImage != null){
+		if (sourceImage != null) {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
 					RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
@@ -133,7 +129,7 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 			}
 
 			if (drawPolygonEnabled == true) {
-				//debugDraw(g2);
+				// debugDraw(g2);
 				drawPolygons(g2);
 			}
 			g2.dispose();
@@ -168,12 +164,10 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 			Point startPoint = null;
 			Point endPoint = null;
 
-			for (Iterator<Point> contourIt = outerPointsIterator; contourIt
-					.hasNext();) {
+			for (Iterator<Point> contourIt = outerPointsIterator; contourIt.hasNext();) {
 				startPoint = endPoint;
 				endPoint = contourIt.next();
 				if (startPoint != null) {
-
 					// is start pos within view section
 					boolean isStartPosVisible = startPoint.x >= sourceX1
 							&& startPoint.x <= sourceX2
@@ -195,22 +189,18 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 		}
 
 		g2.setColor(CONTOUR_INNER_COLOR);
-		for (Iterator<Integer> innterContourIt = innerContour
-				.getContourIterator(); innterContourIt.hasNext();) {
+		for (Iterator<Integer> innterContourIt = innerContour.getContourIterator(); innterContourIt.hasNext();) {
 			int contourID = innterContourIt.next();
 
-			Iterator<Point> innerPointsIterator = innerContour
-					.getPointIterator(contourID);
+			Iterator<Point> innerPointsIterator = innerContour.getPointIterator(contourID);
 
 			Point startPoint = null;
 			Point endPoint = null;
 
-			for (Iterator<Point> contourIt = innerPointsIterator; contourIt
-					.hasNext();) {
+			for (Iterator<Point> contourIt = innerPointsIterator; contourIt.hasNext();) {
 				startPoint = endPoint;
 				endPoint = contourIt.next();
 				if (startPoint != null) {
-
 					// is start pos within view section
 					boolean isStartPosVisible = startPoint.x >= sourceX1
 							&& startPoint.x <= sourceX2
@@ -236,11 +226,10 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 		//link the poly data structure of the tracer the image component to display the polygons
 		outerPolygons = ImageTracer.getInstance().getOuterPolygons();
 		innerPolygons = ImageTracer.getInstance().getInnerPolygons();
-		
-		if(innerPolygons != null){
-			//go through all inner polygons and draw their vertices
-			for (Iterator<Integer> polygonIt = innerPolygons.getContourIterator(); polygonIt
-					.hasNext();) {
+
+		if (innerPolygons != null) {
+			// go through all inner polygons and draw their vertices
+			for (Iterator<Integer> polygonIt = innerPolygons.getContourIterator(); polygonIt.hasNext();) {
 				int polygonID = polygonIt.next();
 
 				Iterator<Point> vertexIt = innerPolygons.getPointIterator(polygonID);
@@ -263,35 +252,31 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 								&& polySegmentEnd.y <= sourceY2;
 
 						if (isStartPosVisible && isEndPosVisible) {
-
 							g2.setStroke(new BasicStroke(POLYSEGMENT_STROKE_WIDTH));
 							g2.setColor(POLYSEGMENT_INNER_COLOR);
-							g2
-									.drawLine(
-											(int) ((polySegmentStart.x - sourceX1) * pixelSize),
-											(int) ((polySegmentStart.y - sourceY1) * pixelSize),
-											(int) ((polySegmentEnd.x - sourceX1) * pixelSize),
-											(int) ((polySegmentEnd.y - sourceY1) * pixelSize));
+							g2.drawLine(
+										(int) ((polySegmentStart.x - sourceX1) * pixelSize),
+										(int) ((polySegmentStart.y - sourceY1) * pixelSize),
+										(int) ((polySegmentEnd.x - sourceX1) * pixelSize),
+										(int) ((polySegmentEnd.y - sourceY1) * pixelSize));
 
 							g2.setColor(POLYSEGMENT_VERTEX_COLOR);
-							g2
-									.fillOval(
-											(int) ((polySegmentStart.x - sourceX1) * pixelSize)
-													- POLYSEGMENT_VERTEX_SIZE / 2,
-											(int) ((polySegmentStart.y - sourceY1) * pixelSize)
-													- POLYSEGMENT_VERTEX_SIZE / 2,
-											POLYSEGMENT_VERTEX_SIZE,
-											POLYSEGMENT_VERTEX_SIZE);
+							g2.fillOval(
+										(int) ((polySegmentStart.x - sourceX1) * pixelSize)
+												- POLYSEGMENT_VERTEX_SIZE / 2,
+										(int) ((polySegmentStart.y - sourceY1) * pixelSize)
+												- POLYSEGMENT_VERTEX_SIZE / 2,
+										POLYSEGMENT_VERTEX_SIZE,
+										POLYSEGMENT_VERTEX_SIZE);
 						}
 					}
 				}
 			}
 		}
 		
-		if(outerPolygons != null){
-			//go through all outer polygons and draw their vertices
-			for (Iterator<Integer> polygonIt = outerPolygons.getContourIterator(); polygonIt
-					.hasNext();) {
+		if (outerPolygons != null) {
+			// go through all outer polygons and draw their vertices
+			for (Iterator<Integer> polygonIt = outerPolygons.getContourIterator(); polygonIt.hasNext();) {
 				int polygonID = polygonIt.next();
 
 				Iterator<Point> vertexIt = outerPolygons.getPointIterator(polygonID);
@@ -314,32 +299,28 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 								&& polySegmentEnd.y <= sourceY2;
 
 						if (isStartPosVisible && isEndPosVisible) {
-
 							g2.setStroke(new BasicStroke(POLYSEGMENT_STROKE_WIDTH));
 							g2.setColor(POLYSEGMENT_OUTER_COLOR);
-							g2
-									.drawLine(
-											(int) ((polySegmentStart.x - sourceX1) * pixelSize),
-											(int) ((polySegmentStart.y - sourceY1) * pixelSize),
-											(int) ((polySegmentEnd.x - sourceX1) * pixelSize),
-											(int) ((polySegmentEnd.y - sourceY1) * pixelSize));
+							g2.drawLine(
+										(int) ((polySegmentStart.x - sourceX1) * pixelSize),
+										(int) ((polySegmentStart.y - sourceY1) * pixelSize),
+										(int) ((polySegmentEnd.x - sourceX1) * pixelSize),
+										(int) ((polySegmentEnd.y - sourceY1) * pixelSize));
 
 							g2.setColor(POLYSEGMENT_VERTEX_COLOR);
-							g2
-									.fillOval(
-											(int) ((polySegmentStart.x - sourceX1) * pixelSize)
-													- POLYSEGMENT_VERTEX_SIZE / 2,
-											(int) ((polySegmentStart.y - sourceY1) * pixelSize)
-													- POLYSEGMENT_VERTEX_SIZE / 2,
-											POLYSEGMENT_VERTEX_SIZE,
-											POLYSEGMENT_VERTEX_SIZE);
+							g2.fillOval(
+										(int) ((polySegmentStart.x - sourceX1) * pixelSize)
+												- POLYSEGMENT_VERTEX_SIZE / 2,
+										(int) ((polySegmentStart.y - sourceY1) * pixelSize)
+												- POLYSEGMENT_VERTEX_SIZE / 2,
+										POLYSEGMENT_VERTEX_SIZE,
+										POLYSEGMENT_VERTEX_SIZE);
 						}
 					}
 				}
 			}
 		}
 	}
-
 
 	public void update() {
 		sourceX1 = imageComponent.getViewSection().x;
@@ -372,20 +353,16 @@ public class ImageZoomComponent extends JComponent implements TraceListener {
 		this.outerPolygons = polygons;
 	}
 
-
 	public Dimension getPreferredSize() {
-
 		return new Dimension(size, size);
 	}
 
 	public void onAdjacentPixelsChanged() {
-
 	}
 
 	public void onCurrentPixelChanged(final Point pixel) {
-		System.out.println("Current Pixel is now X:" + pixel.x + "Y: "
-				+ pixel.y);
-		//currentPixel = pixel;
+		System.out.println("Current Pixel is now X:" + pixel.x + "Y: " + pixel.y);
+		// currentPixel = pixel;
 		repaint();
 	}
 

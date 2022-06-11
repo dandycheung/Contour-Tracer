@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package trace.core;
 
 import java.awt.Point;
@@ -34,7 +33,6 @@ import tracer.main.TraceListener;
 import tracer.utils.Contour;
 
 public class Potracer {
-
 	private ImageComponent sourceImage;
 	private Contour outerContour;
 	private Contour innerContour;
@@ -82,8 +80,7 @@ public class Potracer {
 					Point currentVertex = new Point(i % sourceImage.getImageWidth(), i / sourceImage.getImageWidth());
 
 					// check if we hit outer or inner contour
-					if (sourcePixels[i] == 0xff000000
-							&& sourcePixels[i - 1] == 0xffffffff) {
+					if (sourcePixels[i] == 0xff000000 && sourcePixels[i - 1] == 0xffffffff) {
 						followContour(currentVertex, false);
 					} else {
 						followContour(currentVertex, true);
@@ -92,8 +89,7 @@ public class Potracer {
 			}
 
 			// inform listeners
-			for (Iterator<TraceListener> listenerIt = traceListeners.iterator(); listenerIt
-					.hasNext();) {
+			for (Iterator<TraceListener> listenerIt = traceListeners.iterator(); listenerIt.hasNext();) {
 				TraceListener listener = listenerIt.next();
 				listener.onContourChanged();
 			}
@@ -110,22 +106,17 @@ public class Potracer {
 		
 		//walk along contour until we reach the first vertex again
 		while (!isEndReached) {
-			
 			//add the new point
 			if (isInnerContour) {
-				innerContour.addPoint(contourID, new Point(currentVertex.x,
-						currentVertex.y));
+				innerContour.addPoint(contourID, new Point(currentVertex.x, currentVertex.y));
 			} else {
-				outerContour.addPoint(contourID, new Point(currentVertex.x,
-						currentVertex.y));
+				outerContour.addPoint(contourID, new Point(currentVertex.x, currentVertex.y));
 			}
 			
 			// vertex index to pixel index
-			int pixelIndex = currentVertex.y * sourceImage.getImageWidth()
-					+ currentVertex.x;
+			int pixelIndex = currentVertex.y * sourceImage.getImageWidth() + currentVertex.x;
 
-			adjacentPixelIndices[0] = pixelIndex - sourceImage.getImageWidth()
-					- 1;
+			adjacentPixelIndices[0] = pixelIndex - sourceImage.getImageWidth() - 1;
 			adjacentPixelIndices[1] = pixelIndex - sourceImage.getImageWidth();
 			adjacentPixelIndices[2] = pixelIndex - 1;
 			adjacentPixelIndices[3] = pixelIndex;
@@ -134,13 +125,12 @@ public class Potracer {
 
 			//try each direction
 			while (!newVertexFound) {
-				
 				orientation = (orientation + 3) % 4;
 
 				switch (orientation) {
 				// right
 				case 0:
-					if(isInBounds(adjacentPixelIndices[3]) && isInBounds(adjacentPixelIndices[1])){
+					if (isInBounds(adjacentPixelIndices[3]) && isInBounds(adjacentPixelIndices[1])) {
 						if (destinationPixels[adjacentPixelIndices[3]] == 0xffffffff
 								&& destinationPixels[adjacentPixelIndices[1]] == 0xff000000) {
 							newVertexFound = true;
@@ -150,7 +140,7 @@ public class Potracer {
 					break;
 				// up
 				case 1:
-					if(isInBounds(adjacentPixelIndices[1]) && isInBounds(adjacentPixelIndices[0])){
+					if (isInBounds(adjacentPixelIndices[1]) && isInBounds(adjacentPixelIndices[0])) {
 						if (destinationPixels[adjacentPixelIndices[1]] == 0xffffffff
 								&& destinationPixels[adjacentPixelIndices[0]] == 0xff000000) {
 							newVertexFound = true;
@@ -160,7 +150,7 @@ public class Potracer {
 					break;
 				// left
 				case 2:
-					if(isInBounds(adjacentPixelIndices[0]) && isInBounds(adjacentPixelIndices[2])){
+					if (isInBounds(adjacentPixelIndices[0]) && isInBounds(adjacentPixelIndices[2])) {
 						if (destinationPixels[adjacentPixelIndices[0]] == 0xffffffff
 								&& destinationPixels[adjacentPixelIndices[2]] == 0xff000000) {
 							newVertexFound = true;
@@ -170,7 +160,7 @@ public class Potracer {
 					break;
 				// down
 				case 3:
-					if(isInBounds(adjacentPixelIndices[2]) && isInBounds(adjacentPixelIndices[3])){
+					if (isInBounds(adjacentPixelIndices[2]) && isInBounds(adjacentPixelIndices[3])) {
 						if (destinationPixels[adjacentPixelIndices[2]] == 0xffffffff
 								&& destinationPixels[adjacentPixelIndices[3]] == 0xff000000) {
 							newVertexFound = true;
@@ -183,15 +173,13 @@ public class Potracer {
 				}
 			}
 			
-			if(currentVertex.x == firstVertex.x && currentVertex.y == firstVertex.y){
+			if (currentVertex.x == firstVertex.x && currentVertex.y == firstVertex.y) {
 				isEndReached = true;
-				//add the last point to close contour
+				// add the last point to close contour
 				if (isInnerContour) {
-					innerContour.addPoint(contourID, new Point(currentVertex.x,
-							currentVertex.y));
+					innerContour.addPoint(contourID, new Point(currentVertex.x, currentVertex.y));
 				} else {
-					outerContour.addPoint(contourID, new Point(currentVertex.x,
-							currentVertex.y));
+					outerContour.addPoint(contourID, new Point(currentVertex.x, currentVertex.y));
 				}
 			}
 		}
@@ -220,14 +208,11 @@ public class Potracer {
 
 			if (previousPoint != null) {
 				if (currentPoint.y > previousPoint.y) {
-					int pixelIndex = previousPoint.y
-							* sourceImage.getImageWidth()
-							+ previousPoint.x;
+					int pixelIndex = previousPoint.y * sourceImage.getImageWidth() + previousPoint.x;
 
 					invertRow(pixelIndex);
 				} else if (currentPoint.y < previousPoint.y) {
-					int pixelIndex = currentPoint.y
-							* sourceImage.getImageWidth() + currentPoint.x;
+					int pixelIndex = currentPoint.y * sourceImage.getImageWidth() + currentPoint.x;
 
 					invertRow(pixelIndex);
 				}
@@ -236,8 +221,7 @@ public class Potracer {
 	}
 
 	private void invertRow(int startIndex) {
-		for (int i = startIndex; i % sourceImage.getImageWidth() < sourceImage
-				.getImageWidth() - 1; ++i) {
+		for (int i = startIndex; i % sourceImage.getImageWidth() < sourceImage.getImageWidth() - 1; ++i) {
 			// destinationPixels[i] = (byte)(255-destinationPixels[i]);
 
 			if (destinationPixels[i] == 0xff000000) {
@@ -264,12 +248,11 @@ public class Potracer {
 		traceListeners.remove(listener);
 	}
 	
-	private boolean isInBounds(int pixelIndex){
-		if(pixelIndex >= 0 && pixelIndex <= destinationPixels.length){
+	private boolean isInBounds(int pixelIndex) {
+		if (pixelIndex >= 0 && pixelIndex <= destinationPixels.length) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
 }

@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package trace.core;
 
 import java.awt.Point;
@@ -34,7 +33,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.dom.util.DOMUtilities;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
@@ -44,7 +43,6 @@ import tracer.utils.Contour;
 import tracer.utils.Math;
 
 public class CurveBuilder {
-
 	private SVGDocument document;
 	private Element svgRoot;
 
@@ -85,7 +83,6 @@ public class CurveBuilder {
 	String svgNS;
 
 	public CurveBuilder() {
-
 		// default bezier control point parameters
 		this.factor = 4 / (double) 3;
 		this.minimumAngle = 0.55;
@@ -104,14 +101,11 @@ public class CurveBuilder {
 		svgRoot.setAttributeNS(null, "height", "100%");
 		svgRoot.setAttributeNS(null, "viewBox", "0 0 " + VIEWBOX_WIDTH + " "
 				+ VIEWBOX_HEIGHT);
-
 	}
 
 	public void findCurves() {
-
 		// reset data structures
 		polygonsVertices = new Vector<Point[]>();
-
 		centerPoints = new Vector<Point2D.Double[]>();
 
 		outerPolygons = ImageTracer.getInstance().getOuterPolygons();
@@ -130,8 +124,10 @@ public class CurveBuilder {
 				for (int j = 0; pointIt.hasNext(); ++j) {
 					vertices[j] = pointIt.next();
 				}
+
 				polygonsVertices.add(vertices);
 			}
+
 			if (innerPolygons.hasContour(i)) {
 				Iterator<Point> pointIt = innerPolygons.getPointIterator(i);
 				Point vertices[] = new Point[innerPolygons.getContourSize(i)];
@@ -139,6 +135,7 @@ public class CurveBuilder {
 				for (int j = 0; pointIt.hasNext(); ++j) {
 					vertices[j] = pointIt.next();
 				}
+
 				polygonsVertices.add(vertices);
 			}
 		}
@@ -152,7 +149,6 @@ public class CurveBuilder {
 	}
 
 	private void buildDocument() {
-
 		if (curves != null) {
 			for (int i = 0; i < curves.length; ++i) {
 				svgRoot.removeChild(curves[i]);
@@ -164,7 +160,6 @@ public class CurveBuilder {
 		curves = new Element[curveAmount];
 
 		for (int i = 0; i < curveAmount; ++i) {
-
 			if (outerPolygons.hasContour(i)) {
 				curves[i] = document.createElementNS(svgNS, "path");
 
@@ -174,6 +169,7 @@ public class CurveBuilder {
 
 				svgRoot.appendChild(curves[i]);
 			}
+
 			if (innerPolygons.hasContour(i)) {
 				curves[i] = document.createElementNS(svgNS, "path");
 
@@ -183,11 +179,9 @@ public class CurveBuilder {
 				svgRoot.appendChild(curves[i]);
 			}
 		}
-
 	}
 
 	private void calculateCenterPoints() {
-
 		// iterate over polygons and calculate their center points
 		Iterator<Point[]> polygonIt = polygonsVertices.iterator();
 
@@ -206,15 +200,14 @@ public class CurveBuilder {
 						.getY()) / 2;
 				centerPoints[i] = new Point2D.Double(centerPointX, centerPointY);
 			}
+
 			this.centerPoints.add(centerPoints);
 		}
 	}
 
 	public void buildCurves() {
-
 		// iterate over polygons and calculate the curve's control points
 		for (int i = 0; i < polygonsVertices.size(); ++i) {
-
 			Point[] vertices = polygonsVertices.get(i);
 			Point2D.Double centerPoints[] = this.centerPoints.get(i);
 
@@ -228,6 +221,7 @@ public class CurveBuilder {
 					+ " "
 					+ Integer.toString((int) (centerPoints[0].y
 							/ SOURCE_IMG_HEIGHT * VIEWBOX_HEIGHT)));
+
 			for (int j = 0; j < centerPoints.length; ++j) {
 				int centerPointIndex = j % centerPoints.length;
 
@@ -279,7 +273,6 @@ public class CurveBuilder {
 							+ java.lang.Double.toString((curveSegmentEnd.y
 									/ SOURCE_IMG_HEIGHT * VIEWBOX_HEIGHT)));
 					isNewCurveSegment = true;
-
 				} else {
 					Point2D.Double controlPoint1 = lerp(curveSegmentStart,
 							cornerVertex, angle);
@@ -290,6 +283,7 @@ public class CurveBuilder {
 						curveCoordinates = curveCoordinates.concat(" C");
 						isNewCurveSegment = false;
 					}
+
 					curveCoordinates = curveCoordinates.concat(" "
 							+ java.lang.Double.toString((controlPoint1.x
 									/ SOURCE_IMG_WIDTH * VIEWBOX_WIDTH))
@@ -310,12 +304,12 @@ public class CurveBuilder {
 									/ SOURCE_IMG_HEIGHT * VIEWBOX_HEIGHT)));
 				}
 			}
+
 			curves[i].setAttribute("d", curveCoordinates);
 		}
 	}
 
-	private Point2D.Double lerp(Point2D.Double start, Point2D.Double end,
-			double factor) {
+	private Point2D.Double lerp(Point2D.Double start, Point2D.Double end, double factor) {
 		Point2D.Double result = new Point2D.Double();
 		result.setLocation((1 - factor) * start.x + factor * end.x,
 				(1 - factor) * start.y + factor * end.y);
@@ -358,7 +352,6 @@ public class CurveBuilder {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-
 		}
 	}
 }

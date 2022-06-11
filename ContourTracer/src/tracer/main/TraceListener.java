@@ -22,10 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.main;
-import java.awt.Point;
 
+import java.awt.Point;
 
 public interface TraceListener {
 	void onCurrentPixelChanged(final Point pixel);

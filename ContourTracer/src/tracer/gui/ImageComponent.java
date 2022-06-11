@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.gui;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -38,13 +38,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-
-public class ImageComponent extends JComponent{
-
+public class ImageComponent extends JComponent {
 	private static final long serialVersionUID = -7037485372677445280L;
+
 	private final static int MIN_WIDTH = 200;
 	private final static int MIN_HEIGHT = 200;
 	public final static int MIN_SECTION_SIZE = 1;
+
 	private BufferedImage image;
 	private int imageWidth;
 	private int imageHeight;
@@ -56,16 +56,15 @@ public class ImageComponent extends JComponent{
 	private Rectangle viewSection;
 	private boolean isViewSectionVisible;
 	
-	public ImageComponent(){
+	public ImageComponent() {
 		this.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		//1px simple  border
+		// 1px simple border
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
 	}
 	
-	public void loadImage(final File imagePath){
+	public void loadImage(final File imagePath) {
 		try {
-			//BufferedImage newImage = ImageIO.read(imagePath);
+			// BufferedImage newImage = ImageIO.read(imagePath);
 			image = ImageIO.read(imagePath);
 
 			this.imageWidth = image.getWidth();
@@ -83,7 +82,7 @@ public class ImageComponent extends JComponent{
 		}
 	}
 	
-	public BufferedImage getImage(){
+	public BufferedImage getImage() {
 		return image;
 	}
 	
@@ -92,7 +91,7 @@ public class ImageComponent extends JComponent{
 //        g2.setComposite(AlphaComposite.getInstance(
 //                AlphaComposite.SRC_OVER, 1.0f));	
 		g2.drawImage(image, null, 0, 0);
-		if(isViewSectionVisible){
+		if (isViewSectionVisible) {
 			g2.drawRect(viewSection.x,viewSection.y, viewSection.width, viewSection.height);
 		}
 
@@ -100,39 +99,38 @@ public class ImageComponent extends JComponent{
 	}
 	
 	public Dimension getPreferredSize() {
-		if(image != null) 
+		if (image != null)
 			return new Dimension(image.getWidth(), image.getHeight());
 		else
 			return new Dimension(MIN_WIDTH, MIN_HEIGHT);
 	}
 	
-	public int getImageWidth(){
+	public int getImageWidth() {
 		return this.imageWidth;
 	}
 	
-	public int getImageHeight(){
+	public int getImageHeight() {
 		return this.imageHeight;
 	}
 	
-	public void setSectionPostion(final Point p){
-		
-		//check boundaries
-		if(p.x >= 0 && p.y >= 0 && p.x <= imageWidth && p.y <= imageHeight){
-			viewSection.x = p.x - viewSection.width/2;
-			viewSection.y = p.y - viewSection.height/2;
+	public void setSectionPostion(final Point p) {
+		// check boundaries
+		if (p.x >= 0 && p.y >= 0 && p.x <= imageWidth && p.y <= imageHeight) {
+			viewSection.x = p.x - viewSection.width / 2;
+			viewSection.y = p.y - viewSection.height / 2;
 		}
 		repaint();
 	}
 	
-	public Rectangle getViewSection(){
+	public Rectangle getViewSection() {
 		return viewSection;
 	}
 	
-	public int getViewSectionSize(){
+	public int getViewSectionSize() {
 		return viewSection.width;
 	}
 	
-	public void setViewSectionSize(int newSize){
+	public void setViewSectionSize(int newSize) {
 		viewSection.width = newSize;
 		viewSection.height = newSize;
 		repaint();
@@ -140,11 +138,10 @@ public class ImageComponent extends JComponent{
 	
 	public int[] getPixels() {
 		// get reference to internal pixels array
-		if(pixels == null) {
+		if (pixels == null) {
 			pixels = new int[imageWidth * imageHeight];
 			image.getRGB(0, 0, imageWidth, imageHeight, pixels, 0, imageWidth);
-		} else if(pixels.length != imageWidth * imageHeight)
-		{
+		} else if(pixels.length != imageWidth * imageHeight) {
 			pixels = new int[imageWidth * imageHeight];
 			image.getRGB(0, 0, imageWidth, imageHeight, pixels, 0, imageWidth);
 		}
@@ -158,9 +155,10 @@ public class ImageComponent extends JComponent{
 	
 	public void setPixels(int[] pixels, int width, int height) {
 		// set pixels with arbitrary dimension
-		if(pixels == null || pixels.length != width * height) throw new IndexOutOfBoundsException();
+		if (pixels == null || pixels.length != width * height)
+		    throw new IndexOutOfBoundsException();
 	
-		if(width != imageWidth || height != imageHeight) {
+		if (width != imageWidth || height != imageHeight) {
 			// image dimension changed
 			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			imageWidth = width;
@@ -170,7 +168,7 @@ public class ImageComponent extends JComponent{
 		
 		image.setRGB(0, 0, width, height, pixels, 0, width);
 		
-		if(pixels != null && pixels != this.pixels) {
+		if (pixels != null && pixels != this.pixels) {
 			// update internal pixels array
 			System.arraycopy(pixels, 0, this.pixels, 0, java.lang.Math.min(pixels.length, this.pixels.length));
 		}
@@ -192,7 +190,7 @@ public class ImageComponent extends JComponent{
 	}
 	
 	private void resetViewSection(){
-		if(imageWidth <= imageHeight) {
+		if (imageWidth <= imageHeight) {
 			this.sectionSize = imageWidth/2;
 			this.maxSectionSize = imageWidth;
 		} else {

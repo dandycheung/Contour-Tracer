@@ -28,58 +28,56 @@ public class Vector2D {
 	public double x;
 	public double y;
 	
-	public Vector2D(){
-		x=0;
-		y=0;
+	public Vector2D() {
+		x = 0;
+		y = 0;
 	}
 	
-	public Vector2D(final double x, final double y){
+	public Vector2D(final double x, final double y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public static double dot(Vector2D v1, Vector2D v2){
+
+	public static double dot(Vector2D v1, Vector2D v2) {
 		return v1.x * v2.x + v1.y * v1.y;
 	}
-	
-	public static double cross(Vector2D v1, Vector2D v2){
+
+	public static double cross(Vector2D v1, Vector2D v2) {
 		return v1.x * v2.y - v1.y * v2.x;
 	}
-	
-	public double length(){
+
+	public double length() {
 		return java.lang.Math.sqrt(x * x + y * y);
 	}
-	
-	public void normalize(){
-		double length=length();
+
+	public void normalize() {
+		double length = length();
 		this.x /= length;
 		this.y /= length;
 	}
-	
-	public void add(final Vector2D vec){
+
+	public void add(final Vector2D vec) {
 		x += vec.x;
 		y += vec.y;
 	}
-	
-	public void subtract(final Vector2D vec){
+
+	public void subtract(final Vector2D vec) {
 		x -= vec.x;
 		y -= vec.y;
 	}
-	
-	public void multiply(final double scalar){
+
+	public void multiply(final double scalar) {
 		x *= scalar;
 		y *= scalar;
 	}
-	
-	public void multiply(final Vector2D vec){
+
+	public void multiply(final Vector2D vec) {
 		x *= vec.x;
 		y *= vec.x;
 	}
-	
-	
-	public void divide(final double scalar){
+
+	public void divide(final double scalar) {
 		x /= scalar;
 		y /= scalar;
 	}
-
 }

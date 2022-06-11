@@ -22,10 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.main;
-import tracer.utils.Vector2D;
 
+import tracer.utils.Vector2D;
 
 public interface PolyBuildListener {
 	void onLineSegmentChanged();

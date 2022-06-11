@@ -22,17 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
 package tracer.utils;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-public class Math {
-	
+public class Math {	
 	/** Calculates the distance between two points
 	 */
-	public static double distance(Point2D.Double A, Point2D.Double B){
+	public static double distance(Point2D.Double A, Point2D.Double B) {
 		double d1 = A.x - B.x;
 		double d2 = A.y - B.y;
 		
@@ -41,7 +39,7 @@ public class Math {
 	
 	/** Calculates the distance from C to the line AB
 	 */
-	public static double pointLineDistance(Point2D.Double A, Point2D.Double B, Point2D.Double C){		
+	public static double pointLineDistance(Point2D.Double A, Point2D.Double B, Point2D.Double C) {
 		Vector2D vecAB = new Vector2D(B.x - A.x, B.y - A.y);
 		Vector2D vecAC = new Vector2D(C.x - A.x, C.y - A.y);
 		
@@ -52,7 +50,7 @@ public class Math {
 	
 //	/** Calculates the distance from C to the line AB
 //	 */
-//	public static double pointLineDistance(Point A, Point B, Point C){		
+//	public static double pointLineDistance(Point A, Point B, Point C) {
 //		Vector2D vecAB = new Vector2D(B.x - A.x, B.y - A.y);
 //		Vector2D vecAC = new Vector2D(C.x - A.x, C.y - A.y);
 //		
@@ -62,18 +60,14 @@ public class Math {
 //	}
 	
 	 public static double distanceToSegment(Point p1, Point p2, Point p3) {
-
 		final double xDelta = p2.x - p1.x;
 		final double yDelta = p2.y - p1.y;
 
 		if ((xDelta == 0) && (yDelta == 0)) {
-			throw new IllegalArgumentException(
-					"p1 and p2 cannot be the same point");
+			throw new IllegalArgumentException("p1 and p2 cannot be the same point");
 		}
 
-		final double u = ((p3.x - p1.x) * xDelta + (p3.y - p1
-				.y)
-				* yDelta)
+		final double u = ((p3.x - p1.x) * xDelta + (p3.y - p1.y) * yDelta)
 				/ (xDelta * xDelta + yDelta * yDelta);
 
 		final Point2D closestPoint;
@@ -82,19 +76,17 @@ public class Math {
 		} else if (u > 1) {
 			closestPoint = p2;
 		} else {
-			closestPoint = new Point2D.Double(p1.getX() + u * xDelta, p1.getY()
-					+ u * yDelta);
+			closestPoint = new Point2D.Double(p1.getX() + u * xDelta, p1.getY() + u * yDelta);
 		}
 
 		return maxNormDistance(closestPoint.getX(), closestPoint.getY(),  p3.x, p3.y);
 	}
 	
-	public static double maxNormDistance(double aX, double aY, double bX, double bY){
-
+	public static double maxNormDistance(double aX, double aY, double bX, double bY) {
 		double a = java.lang.Math.abs(aX - bX);
 		double b = java.lang.Math.abs(aY - bY);
 		
-		if(a>b){
+		if (a > b) {
 			return a;
 		} else {
 			return b;
